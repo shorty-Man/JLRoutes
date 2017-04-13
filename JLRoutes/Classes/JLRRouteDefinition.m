@@ -106,6 +106,10 @@
             // this is a variable, set it in the params
             NSString *variableName = [self routeVariableNameForValue:patternComponent];
             NSString *variableValue = [self routeVariableValueForValue:URLComponent];
+            
+            // Consult the parsing utilities as well to do any other standard variable transformations
+            variableValue = [JLRParsingUtilities variableValueFrom:variableValue decodePlusSymbols:request.decodePlusSymbols];
+            
             routeVariables[variableName] = variableValue;
         } else if ([patternComponent isEqualToString:@"*"]) {
             // match wildcards
@@ -162,9 +166,6 @@
         var = [var substringToIndex:var.length - 1];
     }
     
-    // Consult the parsing utilities as well to do any other global variable transformations.
-    var = [JLRParsingUtilities variableValueFrom:var decodePlusSymbols:[JLRoutes shouldDecodePlusSymbols]];
-    
     return var;
 }
 
@@ -175,7 +176,7 @@
     NSMutableDictionary *matchParams = [NSMutableDictionary dictionary];
     
     // First, add the parsed query parameters ('?a=b&c=d'). Also includes fragment.
-    [matchParams addEntriesFromDictionary:[JLRParsingUtilities queryParams:request.queryParams decodePlusSymbols:[JLRoutes shouldDecodePlusSymbols]]];
+    [matchParams addEntriesFromDictionary:[JLRParsingUtilities queryParams:request.queryParams decodePlusSymbols:request.decodePlusSymbols]];
     
     // Next, add the actual parsed route variables (the items in the route prefixed with ':')
     [matchParams addEntriesFromDictionary:routeVariables];
