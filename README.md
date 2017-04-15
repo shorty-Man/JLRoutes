@@ -81,7 +81,7 @@ As you may have noticed, the handler block is expected to return a boolean for i
 
 It is also important to note that if you pass nil for the handler block, an internal handler block will be created that simply returns `YES`.
 
-### Configuration ###
+### Global Configuration ###
 
 There are multiple global configuration options available to help customize JLRoutes behavior for a particular use-case. All options only take affect for the next operation.
 
