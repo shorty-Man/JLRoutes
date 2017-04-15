@@ -29,6 +29,7 @@ Documentation is available [here](http://cocoadocs.org/docsets/JLRoutes/).
   // ...
 
   JLRoutes *routes = [JLRoutes globalRoutes];
+
   [routes addRoute:@"/user/view/:userID" handler:^BOOL(NSDictionary *parameters) {
     NSString *userID = parameters[@"userID"]; // defined in the route by specifying ":userID"
 
@@ -38,7 +39,6 @@ Documentation is available [here](http://cocoadocs.org/docsets/JLRoutes/).
   }];
 
   // ...
-  return YES;
 }
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *, id> *)options
@@ -244,7 +244,14 @@ It is possible to control how routes are parsed by subclassing `JLRRouteDefiniti
 @end
 ```
 
-If you've written a custom route definition and want JLRoutes to use it as the main definition type, use `+setDefaultRouteDefinitionClass:` to configure it as the routing definition class:
+This route can now be created an added:
+```objc
+id handlerBlock = ... // assume exists
+AlwaysMatchRouteDefinition *alwaysMatch = [[AlwaysMatchRouteDefinition alloc] initWithPattern:@"/foo" priority:0 handlerBlock:handlerBlock];
+[[JLRoutes globalRoutes] addRoute:alwaysMatch];
+```
+
+Alternatively, if you've written a custom route definition and want JLRoutes to always use it when adding a route (using one of the `addRoute:` methods that takes in raw parameters), use `+setDefaultRouteDefinitionClass:` to configure it as the routing definition class:
 ```objc
 [JLRoutes setDefaultRouteDefinitionClass:[MyCustomRouteDefinition class]];
 ```
